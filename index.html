@@ -47,9 +47,20 @@ Knowledge of ES6 syntax is assumed
 A Promise is an object representing the eventual completion or failure of an asynchronous (or synchronous) operation.
 
 - Makes async code easier to read, understand, and test
+
+--
+
 - Can combine async and sync code by using a Promise chain
+
+--
+
 - Most commonly used as an alternative to callbacks
+
+--
+
 - Widespread community adoption especially with ES6 and beyond
+
+--
 
 ```javascript
 const myPromise = new Promise((resolve, reject) => {
@@ -74,6 +85,8 @@ const myPromise = new Promise((resolve, reject) => {
 ### Problem
 
 Suppose we wanted to randomly choose a GitHub user and then randomly view the details of a public gist belonging to that user.
+
+--
 
 ### Solution
 
