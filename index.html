@@ -204,20 +204,22 @@ Here's the same code block but with simulated errors.
 outerPromise('outer!')
   .then(outerText => {
     // 50% chance to get punched in the face by Robin
-    const shouldThrow = _.random(0, 1) === 0 ? true : false;
-    if (shouldThrow) {
-      throw new Error('Pow!')
+    if (Math.round(Math.random(0, 1))) {
+      throw new Error('Pow!');
     }
     return innerPromise('inner!')
       .then(innerText => {
-        // 100% chance to get punched in the face by Batman
-        throw new Error('Bam!')
+        // 50% chance to get punched in the face by Batman
+        if (Math.round(Math.random(0, 1))) {
+          throw new Error('Bam!');
+        }
       })
       .catch(err => {
         console.log(err.message); // should print "Bam!"
       });
   })
   .then(finalText => {
+    // 100% chance to get punched by Robin and Batman at the same time
     throw new Error('Wham!');
   })
   .catch(err => {
