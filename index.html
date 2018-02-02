@@ -64,12 +64,10 @@ A Promise is an object representing the eventual completion or failure of an asy
 
 ```javascript
 const myPromise = new Promise((resolve, reject) => {
-  // Give the promise a 50% change to either resolve or reject
-  const shouldReject = _.random(0, 1) === 0 ? true : false;
-
   // Simulate async code with a delay
   setTimeout(() => {
-    if (shouldReject) {
+    // Give the promise a 50% change to either resolve or reject
+    if (randomInteger(0, 1)) {
       reject(new Error('Epic Fail!'))
     } {
       resolve('Great Success!');
@@ -77,6 +75,10 @@ const myPromise = new Promise((resolve, reject) => {
   }, 1337);
 });
 ```
+
+???
+
+Assume randomInteger is a function defined elsewhere
 
 ---
 
@@ -113,12 +115,12 @@ fetchCallback('/users', (err, users) => {
   if (err) {
     // handle error
   }
-  const randomUser = users[_.random(0, users.length - 1)];
-  fetchCallback(`/users/${randomUser.username}/gists/public`, (err, gists) => {
+  const randomUser = users[randomInteger(0, users.length - 1)];
+  fetchCallback(`/users/${randomUser.username}/gists`, (err, gists) => {
     if (err) {
       // handle error
     }
-    const randomGist = gists[_.random(0, gists.length - 1)];
+    const randomGist = gists[randomInteger(0, gists.length - 1)];
     fetchCallback(`/gists/${randomGist.id}`, (err, gist) => {
       if (err) {
         // handle error
@@ -131,7 +133,7 @@ fetchCallback('/users', (err, users) => {
 
 ???
 
-We are using the lodash library for generating a random integer
+Assume randomInteger is a function defined elsewhere
 
 ---
 
@@ -144,11 +146,11 @@ The same solution when using promises...
 ```javascript
 fetchPromise('/users')
   .then(users => {
-    const randomUser = users[_.random(0, users.length - 1)];
+    const randomUser = users[randomInteger(0, users.length - 1)];
     return fetchPromise(`/users/${randomUser.username}/gists`);
   })
   .then(gists => {
-    const randomGist = gists[_.random(0, gists.length - 1)];
+    const randomGist = gists[randomInteger(0, gists.length - 1)];
     return fetchPromise(`/gists/${randomGist.id}`);
   })
   .then(gist => {
@@ -161,7 +163,7 @@ fetchPromise('/users')
 
 ???
 
-We are using the lodash library for generating a random integer
+Assume randomInteger is a function defined elsewhere
 
 ---
 
@@ -204,13 +206,13 @@ Here's the same code block but with simulated errors.
 outerPromise('outer!')
   .then(outerText => {
     // 50% chance to get punched in the face by Robin
-    if (Math.round(Math.random(0, 1))) {
+    if (randomInteger(0, 1)) {
       throw new Error('Pow!');
     }
     return innerPromise('inner!')
       .then(innerText => {
         // 50% chance to get punched in the face by Batman
-        if (Math.round(Math.random(0, 1))) {
+        if (randomInteger(0, 1)) {
           throw new Error('Bam!');
         }
       })
@@ -239,10 +241,10 @@ ES2017 introduced the `async/await` syntax – allowing us to add a bit of synta
 async function fetchGist() {
   try {
     const users = await fetchPromise('/users');
-    const randomUser = users[_.random(0, users.length - 1)];
+    const randomUser = users[randomInteger(0, users.length - 1)];
 
     const gists = await fetchPromise(`/users/${randomUser.username}/gists`);
-    const randomGist = gists[_.random(0, gists.length - 1)];
+    const randomGist = gists[randomInteger(0, gists.length - 1)];
 
     const gist = await fetchPromise(`/gists/${randomGist.id}`);
     console.log(gist);
