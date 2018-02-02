@@ -38,7 +38,10 @@ class: center, middle
 
 ???
 
-Knowledge of ES6 syntax is assumed
+**Assumptions**
+
+- Knowledge of ES6 syntax
+- Prior experience with callbacks for handling async code
 
 ---
 
@@ -48,19 +51,43 @@ A Promise is an object representing the eventual completion or failure of an asy
 
 - Makes async code easier to read, understand, and test
 
+???
+
+- Deeply nested callbacks are very hard to follow
+- Callbacks and events are difficult to test
+- Very difficult to handle errors
+
+In other languages like C, Ruby or Python there is the expectation that whatever happens on line 1 will finish before the code on line 2 starts running and so on down the file.
+
 --
 
 - Can combine async and sync code by using a Promise chain
 
---
+???
 
-- Most commonly used as an alternative to callbacks
-
---
-
-- Widespread community adoption especially with ES6 and beyond
+- Promises are primarily used for async code, but also works with sync code
 
 --
+
+- Natively available in the ES6 specification
+
+--
+
+- Widespread community adoption – Most if not all popular npm packages now support Promises (e.g. request, mongoose, sequelize)
+
+???
+
+- See slide on async/await for syntactic sugar
+
+---
+
+# Anatomy of a Promise
+
+A Promise is commonly used to wrap async code...
+
+*In this example, we simulate async behavior with `setTimeout`.*
+
+A real world example might be an XHR call or a Database query.
 
 ```javascript
 const myPromise = new Promise((resolve, reject) => {
@@ -78,7 +105,8 @@ const myPromise = new Promise((resolve, reject) => {
 
 ???
 
-Assume randomInteger is a function defined elsewhere
+- Assume randomInteger is a function defined elsewhere
+- Mention that a Promise doesn't necessarily need to contain async code
 
 ---
 
@@ -104,7 +132,7 @@ Suppose we wanted to:
 
 ---
 
-# Life Before Promises (aka Callback Hell)
+# Life Before Promises (aka [Callback Hell](http://callbackhell.com/))
 
 Here's some pseudocode using callbacks... circa 1995
 
@@ -133,7 +161,8 @@ fetchCallback('/users', (err, users) => {
 
 ???
 
-Assume randomInteger is a function defined elsewhere
+- Assume randomInteger is a function defined elsewhere
+- http://callbackhell.com/
 
 ---
 
@@ -163,13 +192,11 @@ fetchPromise('/users')
 
 ???
 
-Assume randomInteger is a function defined elsewhere
+- Assume randomInteger is a function defined elsewhere
 
 ---
 
-# Promise Chains
-
-Promise chains (and nested Promises) can be a confusing concept – especially when it comes to error handling!
+# Promise Chains and Nested Promises
 
 **Pay close attention to the indentation in the following code...**
 
@@ -181,6 +208,7 @@ outerPromise('outer!')
     console.log(outerText); // should print 'outer!'
     return innerPromise('inner!')
       .then(innerText => {
+        console.log(outerText); // should print 'outer!'
         console.log(innerText); // should print 'inner!'
         return `${outerText} -> ${innerText}`;
       })
@@ -196,6 +224,10 @@ outerPromise('outer!')
   });
 ```
 
+???
+
+- Talk a bit about parameter passing and variable closures
+
 ---
 
 # What's the catch?
@@ -205,35 +237,37 @@ Here's the same code block but with simulated errors.
 ```javascript
 outerPromise('outer!')
   .then(outerText => {
-    // 50% chance to get punched in the face by Robin
     if (randomInteger(0, 1)) {
-      throw new Error('Pow!');
+      throw new Error('Pow!'); // 50% chance to get punched by Robin
     }
     return innerPromise('inner!')
       .then(innerText => {
-        // 50% chance to get punched in the face by Batman
         if (randomInteger(0, 1)) {
-          throw new Error('Bam!');
+          throw new Error('Bam!'); // 50% chance to get punched by Batman
         }
       })
       .catch(err => {
         console.log(err.message); // should print "Bam!"
+        // throw err; // what happens if we uncomment this line?
       });
   })
   .then(finalText => {
-    // 100% chance to get punched by Robin and Batman at the same time
-    throw new Error('Wham!');
+    throw new Error('Wham!'); // 100% chance to get combo-ed by Robin and Batman
   })
   .catch(err => {
     console.log(err.message); // should print "Pow!" or "Wham!"
   });
 ```
 
+???
+
+- Talk a bit about error bubbling (see line with commented out `throw err`)
+
 ---
 
 # ES6 and beyond
 
-ES2017 introduced the `async/await` syntax – allowing us to add a bit of syntactic sugar to our usage of Promises.
+ES7 introduced the `async/await` syntax – allowing us to add a bit of syntactic sugar to our usage of Promises.
 
 *Here we are using the `fetchPromise` function (from the previous solution) which returns a Promise when called*
 
@@ -255,6 +289,10 @@ async function fetchGist() {
 
 fetchGist();
 ```
+
+???
+
+- Mention Generators (which is part of ES6 but pretty much replaced by async/await)
 
 ---
 
