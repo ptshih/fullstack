@@ -67,7 +67,7 @@ const myPromise = new Promise((resolve, reject) => {
   // Give the promise a 50% change to either resolve or reject
   const shouldReject = _.random(0, 1) === 0 ? true : false;
 
-  // Simulate async code
+  // Simulate async code with a delay
   setTimeout(() => {
     if (shouldReject) {
       reject(new Error('Epic Fail!'))
@@ -84,7 +84,11 @@ const myPromise = new Promise((resolve, reject) => {
 
 ### Problem
 
-Suppose we wanted to randomly choose a GitHub user and then randomly view the details of a public gist belonging to that user.
+Suppose we wanted to:
+
+1. Randomly choose a GitHub user.
+
+2. Randomly view the details of a public gist belonging to that user.
 
 --
 
